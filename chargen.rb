@@ -34,37 +34,51 @@ def stat_mod(stat)
 	return mod
 end
 
-#create standard stats
-strength = roll_stat
-agility = roll_stat
-stamina = roll_stat
-personality = roll_stat
-intelligence = roll_stat
-luck = roll_stat
+class Character
+	def initialize(word)
+		@name = word
+		@strength = roll_stat
+		@agility = roll_stat
+		@stamina = roll_stat
+		@personality = roll_stat
+		@intelligence = roll_stat
+		@luck = roll_stat
+		
+		#Create derived stats - change based on luck roll or class / race, so want to hold as unique variables for level up
+		@melee_atk = @strength["score"]
+		@missile_atk = @agility["score"]
+		@fort_save = @stamina["score"]
+		@reflex_save = @agility["score"]
+		@will_save = @personality["score"]
+		@speed = 30
+		@crit_die = 4
+		#Lucky Sign will modify some items based on the Luck score. Variable is to hold a string to explain items that are not tracked as a variable
+		@lucky_sign = ""
+		
+		#Create an array to hold hit dice rolls, initialize with the starting value of 1d4
+		@hit_dice = Array.new(1, (roll_one(4)+@stamina["mod"]))
+		@hp = @hit_dice.sum
 
 
-#Create derived stats - change based on luck rull or class / race, so want to hold as unique variables for level up
-meleeAtk = strength["score"]
-missileAtk = agility["score"]
-fortSave = stamina["score"]
-reflexSave = agility["score"]
-willSave = personality["score"]
-speed = 30
+		#Roll initial money
+		@money = roll_many(5,12)
+	end
 
+	def verify
+		puts "Your name is #{@name}"
+		puts "Strength: #{@strength["score"]}, #{@strength["mod"]} bonus"
+		puts "Agility: #{@agility["score"]}, #{@agility["mod"]} bonus"
+		puts "Stamina: #{@stamina["score"]}, #{@stamina["mod"]} bonus"
+		puts "Personality: #{@personality["score"]}, #{@personality["mod"]} bonus"
+		puts "Intelligence: #{@intelligence["score"]}, #{@intelligence["mod"]} bonus"
+		puts "Luck: #{@luck["score"]}, #{@luck["mod"]} bonus"
+		puts "Hit Points: #{@hp}"
+		puts "You have #{@money} coins"
+	end
+end
 
-#Create an array to hold hit dice rolls, initialize with the starting value of 1d4
-hitDice = Array.new(1, (roll_one(4)+stamina["mod"]))
-hp = hitDice.sum
+# puts "What is your character name?"
+# char1 = gets.chomp
 
-#Roll initial money
-money = roll_many(5,12)
-
-
-puts "Strength: #{strength["score"]}, #{strength["mod"]} bonus"
-puts "Agility: #{agility["score"]}, #{agility["mod"]} bonus"
-puts "Stamina: #{stamina["score"]}, #{stamina["mod"]} bonus"
-puts "Personality: #{personality["score"]}, #{personality["mod"]} bonus"
-puts "Intelligence: #{intelligence["score"]}, #{intelligence["mod"]} bonus"
-puts "Luck: #{luck["score"]}, #{luck["mod"]} bonus"
-puts "Hit Points: #{hp}"
-puts "You have #{money} coins"
+guy = Character.new("Goreburger")
+guy.verify
